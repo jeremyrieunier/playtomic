@@ -19,4 +19,4 @@ st.markdown(
 )
 
 st.markdown("---")
-st.markdown("Made using Streamlit. Code is on Github. And this is mon [Linkedin profile](https://www.linkedin.com/in/jeremyrieunier/).")
+st.markdown("Made using Streamlit. Code is on [Github](https://github.com/jeremyrieunier/playtomic). And this is mon [Linkedin profile](https://www.linkedin.com/in/jeremyrieunier/).")
