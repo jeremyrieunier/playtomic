@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("A/B Testing & Product Analytics")
+st.title("🧪 A/B Testing & Product Analytics")
 
 st.markdown("""
 ## Product overview

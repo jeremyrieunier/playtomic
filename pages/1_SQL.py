@@ -78,7 +78,7 @@ con.register("users", df_users)
 con.register("online_court_bookings", df_ocb)
 con.register("open_matches", df_om)
 
-st.title("SQL exercises")
+st.title("🛢️ SQL exercises")
 
 st.write("I used the following tables to answer the questions:")
 st.markdown("### users_data")

@@ -67,7 +67,8 @@ additional_cost = forecast_2024['yearly_cost'].iloc[-1]
 additional_cost_lower = forecast_2024['yearly_cost_lower'].iloc[-1]
 additional_cost_upper = forecast_2024['yearly_cost_upper'].iloc[-1]
 
-# Total forecast for 2024
+
+st,title("📈 Forecasting with Prophet")
 st.markdown(f"""             
 # Forecast for 2024 accounts for a running total of {final_MTU:,.0f} MTU
 - Conservative estimate: {final_MTU_lower:,.0f}
