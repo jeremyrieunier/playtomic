@@ -3,10 +3,9 @@ import pandas as pd
 from streamlit_gsheets import GSheetsConnection
 from prophet import Prophet
 
-
 gsheet_url = "https://docs.google.com/spreadsheets/d/1ttEndNyIecRf7Arm-lhZrcSIh1vWUmEtTYrCGE9dCSU/edit?gid=69050303#gid=69050303"
 
-# variable to calculate MTU cost
+# variables to calculate MTU cost
 contract_MTU = 1000000
 base_yearly_cost = 5000
 additional_cost = 0.006
@@ -21,21 +20,21 @@ def calculate_cost(total_MTU):
 conn = st.connection("gsheets", type=GSheetsConnection)
 MTU_data = conn.read(spreadsheet=gsheet_url, usecols=[0, 1])
 
-# Rename columns for Prophet
+# rename columns for Prophet
 MTU_data.columns = ['ds', 'y']
 MTU_data['ds'] = pd.to_datetime(MTU_data['ds'])
 
-# Create and fit model
+# create and fit model
 m = Prophet()
 m.fit(MTU_data)
 future = m.make_future_dataframe(periods=11, freq="M") 
 forecast = m.predict(future)
 
-# Replace January and February 2024 predictions with actual data
+# replace January and February 2024 predictions with actual data
 jan_feb_2024_data = MTU_data[MTU_data['ds'].dt.year == 2024]
 forecast.loc[forecast['ds'].isin(jan_feb_2024_data['ds']), 'yhat'] = jan_feb_2024_data['y'].values
 
-# Forecast calculations for 2024
+# forecast calculations for 2024
 forecast_2024 = forecast[forecast['ds'].dt.year == 2024][['ds', 'yhat', 'yhat_lower', 'yhat_upper']]
 forecast_2024['running_total'] = forecast_2024['yhat'].cumsum()
 forecast_2024['running_total_lower'] = forecast_2024['yhat_lower'].cumsum() 
@@ -44,31 +43,36 @@ forecast_2024['yearly_cost'] = forecast_2024['running_total'].apply(calculate_co
 forecast_2024['yearly_cost_lower'] = forecast_2024['running_total_lower'].apply(calculate_cost)
 forecast_2024['yearly_cost_upper'] = forecast_2024['running_total_upper'].apply(calculate_cost)
 
-# MTU orecast calculations for 2024
+# MTU forecast calculations for 2024
 final_MTU = forecast_2024['running_total'].iloc[-1]
 final_MTU_lower = forecast_2024['running_total_lower'].iloc[-1]
 final_MTU_upper = forecast_2024['running_total_upper'].iloc[-1]
 
-# Find when we cross 1M
+# find when we cross 1M
 crossing_point = forecast_2024[forecast_2024['running_total'] > 1000000].iloc[0]
 crossing_point_lower = forecast_2024[forecast_2024['running_total_lower'] > 1000000].iloc[0]
 crossing_point_upper = forecast_2024[forecast_2024['running_total_upper'] > 1000000].iloc[0]
 
-# Convert date for formatting
+# convert date for formatting
 base_date = pd.to_datetime(crossing_point['ds']).strftime('%B %Y')
 lower_date = pd.to_datetime(crossing_point_lower['ds']).strftime('%B %Y')
 upper_date = pd.to_datetime(crossing_point_upper['ds']).strftime('%B %Y')
 
-# Format dates for display
+# format dates for display
 forecast_2024['ds'] = forecast_2024['ds'].dt.strftime('%Y-%m-%d')
 
-# Calculate additional costs
+# calculate additional MTU costs
 additional_cost = forecast_2024['yearly_cost'].iloc[-1]
 additional_cost_lower = forecast_2024['yearly_cost_lower'].iloc[-1]
 additional_cost_upper = forecast_2024['yearly_cost_upper'].iloc[-1]
 
+st.set_page_config(
+    page_title="Forecasting with Prophet",
+    page_icon="📈",
+)
 
-st,title("📈 Forecasting with Prophet")
+st.title("📈 Forecasting with Prophet")
+
 st.markdown(f"""             
 # Forecast for 2024 accounts for a running total of {final_MTU:,.0f} MTU
 - Conservative estimate: {final_MTU_lower:,.0f}

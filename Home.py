@@ -5,16 +5,16 @@ st.set_page_config(
     page_icon="👋",
 )
 
-st.title("👋 Hello Playtomic")
+st.title("👋 Hola Playtomic")
 
 st.markdown(
     """
-    Here you'll find my answers for the case study for the Product Data Analyst position.
+    Soy Jeremy. Here you'll find my answers for the Product Data Analyst position case study.
    
     ### Take-home assignments
-    - [SQL exercises](/SQL)
-    - [A/B Testing & Product Analytics](/Product_Analytics)
-    - [Forecasting with Prophet](/Forecasting)
+    - [📊 SQL exercises](/SQL)
+    - [🧪 A/B Testing & Product Analytics](/Product_Analytics)
+    - [📈 Forecasting with Prophet](/Forecasting)
 """
 )
 

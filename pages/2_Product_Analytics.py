@@ -1,5 +1,10 @@
 import streamlit as st
 
+st.set_page_config(
+    page_title="A/B Testing & Product Analytics",
+    page_icon="🧪",
+)
+
 st.title("🧪 A/B Testing & Product Analytics")
 
 st.markdown("""
@@ -18,7 +23,7 @@ Playtomic generates revenue through commissions on both booking types (court res
 
 ## Problem statement
 The product team wants to improve the open match conversion rate for several reasons:
-1. Open matches provide faster value to our users as they require “less effort” than booking a court.
+1. Open matches provide faster value to our users as they require "less effort" than booking a court.
 2. Current court utilisation (and resulting commission revenue) may be suboptimal.
 3. Playtomic might be missing opportunities to foster community engagement through social play.
 
@@ -72,7 +77,7 @@ With these data, we will be able to determine the sample size needed and transla
 
 ## Recommended rollout strategy
 ### Randomisation approach
-First, we have to choose if we want to implement the experimentation and its randomisation at the session level or user level. I'd recommend implementing user-level randomisation to:
+First, we have to choose if we want to implement the experimentation and its randomisation at the session level or user level. I'd recommend implementing user level randomisation to:
 
 - Maintain consistent user experience across sessions
 - Enable tracking of cumulative exposure and conversion
@@ -94,7 +99,7 @@ Once we've confirmed our measurement system is working properly, we'll start wit
 - Start with a 20% treatment group vs 80% control to provide enough traffic to catch major issues
 - Monitor carefully for any negative impacts on the related metrics (primary and guardrail)
 
-#### Full Experiment rollout (2 - 4 weeks)
+#### Full Experiment rollout (> 4 weeks)
 If the initial controlled experiment shows neutral or positive results, we'll proceed with the full rollout. During this final phase, we will:
 
 - Expand to the full test size (50% treatment, 50% control)
