@@ -24,9 +24,9 @@ The product team wants to improve the open match conversion rate for several rea
 
  ## Hypothesis
 We believe that displaying recommended open matches during the court booking flow will increase open matches conversion rate because:
-1. It improves open-match discovery
+1. It improves open-match discovery.
 2. It presents an easier alternative at a moment of high intent. Users have their mobile in one hand and their 💳 credit card in the other hand.
-3. It reduces frictions in finding recommended matches
+3. It reduces frictions in finding recommended matches.
 
 To test this hypothesis the product team will implement a carrousel of personalised recommended matches within the court booking flow.
 
@@ -116,7 +116,7 @@ Other important business metrics like revenue per user, weekly active players, a
 - Tracking metrics (to help explain movements in our primary metric)
 - Lagging indicators (to monitor post-launch)
 
-### Guardrails metrics
+### Guardrail metrics
 We should track 3 types of guardrail metrics to ensure comprehensive monitoring
 
 First is a business metric to ensure we protect business economics and catch any negative impact on platform monetisation. For this experiment, it should be the overall revenue per user:
@@ -135,9 +135,9 @@ Finally, a UX metric to ensure we're not introducing decision paralysis in the c
 We expect to observe 2 distinct patterns when analysing the results of this experiment.
 
 In the control group, where users follow the standard court booking flow, it should be business as usual with:
-- Court booking and open-matches conversion rates remain the same
+- Court booking and open-matches conversion rate remain the same
 - Normal booking completion times
-- Regular booking abandonment rates
+- Regular booking abandonment rate
 
 On the other hand for the treatment group exposed to the carousel feature, we anticipate positive changes in user behaviour, specifically:
 - A statistically significant increase of 10-20% in user open match conversion rate
