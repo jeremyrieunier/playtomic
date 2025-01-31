@@ -1,10 +1,5 @@
 import streamlit as st
 
-st.set_page_config(
-    page_title="A/B Testing & Product Analytics",
-    page_icon="🧪",
-)
-
 st.title("🧪 A/B Testing & Product Analytics")
 
 st.markdown("""

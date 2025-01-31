@@ -66,11 +66,6 @@ additional_cost = forecast_2024['yearly_cost'].iloc[-1]
 additional_cost_lower = forecast_2024['yearly_cost_lower'].iloc[-1]
 additional_cost_upper = forecast_2024['yearly_cost_upper'].iloc[-1]
 
-st.set_page_config(
-    page_title="Forecasting with Prophet",
-    page_icon="📈",
-)
-
 st.title("📈 Forecasting with Prophet")
 
 st.markdown(f"""             

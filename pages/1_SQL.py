@@ -68,20 +68,11 @@ df_users = pd.DataFrame(users_data)
 df_ocb = pd.DataFrame(online_court_bookings_data)
 df_om = pd.DataFrame(open_matches_data)
 
-# st.dataframe(df_users)
-# st.dataframe(df_ocb)
-# st.dataframe(df_om)
-
-
 con = duckdb.connect()
 con.register("users", df_users)
 con.register("online_court_bookings", df_ocb)
 con.register("open_matches", df_om)
 
-st.set_page_config(
-    page_title="SQL exercises",
-    page_icon="📊",
-)
 
 st.title("📊 SQL exercises")
 
@@ -95,25 +86,23 @@ st.dataframe(open_matches_data)
 
 st.subheader("Number of users and the average user level breakdown by user creation date")
 
-query = """
+query_avg_level = """
 select
     created_at as user_creation_date,
     count(user_id) as user_count,
-    avg(user_level) as avg_user_level
+    round(avg(user_level), 2) as avg_user_level
 from users
 group by user_creation_date
 order by user_creation_date
 """
 
-st.code(query, language="sql")
-
-results = con.execute(query).df()
-st.dataframe(con.execute(query).df())
+st.code(query_avg_level, language="sql")
+st.dataframe(con.execute(query_avg_level).df())
 
 
 st.subheader("Number of users who have played at least 1 open match and 1 online court booking match")
 
-query_sql = """
+query_played_both = """
 
 -- CTE to get users who've booked courts online
 with court_booking_users as (
@@ -121,7 +110,7 @@ with court_booking_users as (
     from online_court_bookings
     where user_id is not null
 ),
--- GTE to get users who've played open matches
+-- CTE to get users who've played open matches
 open_match_users as (
     select distinct user_id
     from open_matches
@@ -133,15 +122,15 @@ select
     count(c.user_id) as users_played_both
 from court_booking_users c
 inner join open_match_users o
-on c.user_id = o.user_id
+    on c.user_id = o.user_id
 
 """
-st.code(query_sql, language="sql")
-st.dataframe(con.execute(query_sql).df())
+st.code(query_played_both, language="sql")
+st.dataframe(con.execute(query_played_both).df())
 
-st.subheader("For online court bookings: The number of bookings, the total payment amount, the total b2c commission, and the margin/take rate —breakdown by user country")
+st.subheader("Revenue metrics by user country for online court bookings")
 
-query_book = """
+query_booking_metrics = """
 
 -- CTE to aggregate payment details per booking
 with bookings as (
@@ -171,26 +160,24 @@ order by booking_count desc
 
 """
 
-st.code(query_book, language="sql")
-st.dataframe(con.execute(query_book).df())
+st.code(query_booking_metrics, language="sql")
+st.dataframe(con.execute(query_booking_metrics).df())
 
-st.subheader("Create a rank based on the created_at date per match_id for open matches")
+st.subheader("Rank based on the created_at date per match_id for open matches")
 
 query_rank = """
 select
     match_id,
     user_id,
     created_at,
-    dense_rank() over( -- dense_rank() to avoid gaps 
+    dense_rank() over( -- dense_rank() to avoid gaps and keep order sequential
         partition by match_id
         order by created_at
-        ) as rank
+        ) as player_join_order
 from open_matches
 """
 st.code(query_rank, language="sql")
 st.dataframe(con.execute(query_rank).df())
-st.write("All dates come without timestamp")
-
 
 st.subheader("Funnel analysis to see, per user creation year, the conversion from user creation to an open match.")
 
@@ -203,7 +190,7 @@ with user_creation as (
     from users
 ),
 -- CTE to get the users who participated in an open match
-user_open_match as (
+users_open_match as (
     select distinct user_id
     from open_matches
     where user_id is not null
@@ -211,11 +198,11 @@ user_open_match as (
 
 select
     u.creation_year as creation_year,
-    count(u.user_id) as count_user,
-    count(o.user_id) as converted_user,
-    round(count(o.user_id) / count(u.user_id) * 100, 2) as conversion_rate
+    count(u.user_id) as total_users,
+    count(o.user_id) as users_played_open_match,
+    round(count(o.user_id) / count(u.user_id) * 100, 2) as open_match_conversion_rate
 from user_creation u
-left join user_open_match o
+left join users_open_match o
     on u.user_id = o.user_id
 group by u.creation_year
 order by u.creation_year
